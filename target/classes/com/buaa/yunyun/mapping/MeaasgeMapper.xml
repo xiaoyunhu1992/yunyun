@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.buaa.yunyun.dao.MessageDao" >
+  <resultMap id="BaseResultMap" type="com.buaa.yunyun.pojo.Message" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="senderid" property="senderid" jdbcType="VARCHAR" />
+    <result column="recipientid" property="recipientid" jdbcType="VARCHAR" />
+  </resultMap>
+   <sql id="Base_Column_List" >
+    a.messageid,b.body,a.senderid,a.recipientid 
+  </sql> 
+  <select id="getMessages"  parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    a.messageid,b.body,a.senderid,a.recipientid
+    from edgemap a, bodies b 
+    where a.messageid=b.messageid and b.body like  concat('%',#{0},'%')
+  </select>
+</mapper>

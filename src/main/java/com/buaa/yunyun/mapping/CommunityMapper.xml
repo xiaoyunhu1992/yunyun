@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.buaa.yunyun.dao.CommunityDao" >
+  <resultMap id="BaseResultMap" type="com.buaa.yunyun.pojo.Edge" >
+    <id column="senderid" property="source" jdbcType="INTEGER" />
+    <result column="recipientid" property="target" jdbcType="INTEGER" />
+    <result column="count" property="weight" jdbcType="INTEGER" />
+  </resultMap>
+   <sql id="Base_Column_List" >
+    senderid,recipientid,count(*) as count 
+  </sql> 
+  <select id="getGraph"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from edgemap 
+    group by senderid,recipientid
+  </select>
+  <select id="getNode" resultType="java.lang.Integer">
+      select senderid as id from edgemap 
+      union
+      select recipientid as id from edgemap
+  </select>
+  <select id="getInterNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+      select count(*) 
+      from edgemap 
+      where senderid=#{0} and recipientid=#{1} 
+      or 
+      senderid=#{1} and recipientid=#{0}
+  </select> 
+  <select id="getSubject" parameterType="java.lang.Integer" resultType="java.lang.String">
+      select subject 
+      from edgemap 
+      where senderid=#{0} or recipientid=#{0}
+  </select>
+  
+  <select id="getMessageid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+      select messageid 
+      from edgemap 
+      where recipientid=#{0}
+  </select>
+  <select id="getCloser" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+      select count(*) 
+      from edgemap 
+      where senderid=#{0} and recipientid=#{1}
+      or 
+      senderid=#{1} and recipientid=#{0}
+  </select>
+</mapper>
